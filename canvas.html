@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #252523;
+        }
+        #canvas {
+            background-color: #fdfff5;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <script>
+        let canvas = document.querySelector('#canvas')
+        let ctx = canvas.getContext('2d')
+
+        // ctx.fillStyle = 'indigo'
+        // ctx.fillRect(50, 50, 100, 100)
+        // ctx.fillStyle = 'pink'
+        // ctx.fillRect(100, 100, 100, 100)
+
+        // ctx.strokeStyle = 'blue'
+        // ctx.strokeRect(50, 50, 100, 100)
+
+        // ctx.lineWidth = 5
+        // ctx.strokeStyle = 'red'
+        // ctx.strokeRect(150, 150, 150, 150)
+
+        // ctx.fillStyle = 'indigo'
+        // ctx.fillRect(50, 50, 100, 100)
+        // ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight)
+
+        // ctx.font = "30px Arial"
+        // ctx.strokeStyle = 'indigo'
+        // ctx.strokeText('hello owdadsd0', 50, 100)
+
+        // ctx.beginPath()
+        // ctx.moveTo(50, 50)
+        // ctx.lineTo(150, 50)                     
+        // ctx.moveTo(150, 50)
+        // ctx.lineTo(100, 150)
+        // ctx.moveTo(100, 150)
+        // ctx.lineTo(50, 50)
+        // ctx.stroke();
+
+        // ctx.arc(100, 100, 40, 0, Math.PI * 2)
+        // ctx.stroke()
+
+        let Circle = function(x, y, size, color) {
+            this.x = x
+            this.y = y
+            this.size = size
+            this.color = color
+            this.dx = 5;
+            this.dy = 4
+
+            this.drawCircle = function() {
+                ctx.beginPath()
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+                ctx.fillStyle = this.color;
+                ctx.fill()
+            }
+
+            this.move = function() {
+                this.x += this.dx
+                this.y += this.dy
+                this.collision()
+            }
+
+            this.collision = function() {
+                if (this.x + this.size > canvas.clientWidth || this.x - this.size < 0) {
+                    this.dx *= -1
+                }
+                if (this.y + this.size > canvas.clientHeight || this.y - this.size < 0) {
+                    this.dy *= -1
+                }
+            }
+
+            this.detectCollision = function(other) {
+                for (let i = 0; i < other.length; i++) {
+                    const el = other[i]
+                    if (el != this) {
+                        let distanceX = this.x - el.x
+                        let distanceY = this.y - el.y
+                        let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
+                        if (distance < this.size + el.size) {
+                            let colorChange = 'rgb("Math.random * 30, Math.random * 30, Math.random * 30")'
+                            el.color = colorChange
+                            let tmpX = this.dx
+                            let tmpY = this.dy
+                            this.dx = el.dx
+                            this.dy = el.dy
+                            el.dx = tmpX
+                            el.dy = tmpY
+                           
+                        }
+                    }
+                }
+            }
+        }
+        let c1 = new Circle(50, 30, 20, 'lime')
+        let c2 = new Circle(150, 50, 30, 'blue')
+        let c3 = new Circle(35, 150, 15, 'purple')
+        let circles = [c1, c2, c3]
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight)
+            
+            for (let i = 0; i < circles.length; i++) {
+                const c = circles[i]
+                c.move()
+                c.detectCollision(circles)
+                c.drawCircle()
+                
+            }
+
+            requestAnimationFrame(update)
+        }
+
+        update()
+    </script>
+</body>
+</html>

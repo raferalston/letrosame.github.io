@@ -96,7 +96,14 @@
                         let distanceY = this.y - el.y
                         let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
                         if (distance < this.size + el.size) {
+                            
+                            // Тут ошибка
                             let colorChange = 'rgb("Math.random * 30, Math.random * 30, Math.random * 30")'
+                            // Правила для записи строк с переменными
+                            'a' + 'b' + 'c' == 'abc'
+                            let foo = 'b'
+                            'a' + foo + 'c' == 'abc'
+                            
                             el.color = colorChange
                             let tmpX = this.dx
                             let tmpY = this.dy
